@@ -8,10 +8,10 @@
 
 # 動かし方
 
- 1.Pythonを入れる  
- python インストール方法　などでググったら出てくる  
- 2.<>Code∇　と書いてあるボタンをクリック  
- 3.Download Zip を押す  
- 4.ダウンロードしたzipを解凍する  
- 5.中にあるmain.pyを実行する  
+ 1.Pythonを入れる<br></br><br></br>
+ python インストール方法　などでググったら出てくる<br></br><br></br>
+ 2.<>Code∇　と書いてあるボタンをクリック<br></br><br></br>
+ 3.Download Zip を押す<br></br><br></br>
+ 4.ダウンロードしたzipを解凍する<br></br><br></br>
+ 5.中にあるmain.pyを実行する<br></br><br></br>
  
