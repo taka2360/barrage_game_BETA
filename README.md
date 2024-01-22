@@ -8,7 +8,7 @@
 
 # 動かし方
 
- 1.Pythonを入れる<br></br><br></br>
+ 1.Pythonを入れる<br></br>
  python インストール方法　などでググったら出てくる<br></br><br></br>
  2.<>Code∇　と書いてあるボタンをクリック<br></br><br></br>
  3.Download Zip を押す<br></br><br></br>
