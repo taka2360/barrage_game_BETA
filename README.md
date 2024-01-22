@@ -3,5 +3,5 @@
 東方の二次創作ゲーム(になる予定)です。
 <br></br>
 ### 開発環境
- Python 3.11.4 64-bit  
- vscode
+  Python 3.11.4 64-bit  
+  vscode
