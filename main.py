@@ -1,4 +1,5 @@
 import tkinter as tk
+from src import *
 
 class App:
   def __init__(self):
@@ -7,4 +8,5 @@ class App:
     self.window.update()
 
 if __name__ == "__main__":
+  app = App()
   
