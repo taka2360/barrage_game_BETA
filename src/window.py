@@ -15,7 +15,12 @@ class Window:
         self.window.geometry(f"{self.size_x}x{self.size_y}")
 
         if options.keys() in "fullscreen":
-            self.window.attributes("-fullscreen", True)
+            if options["fullscreen"]:
+                self.window.attributes("-fullscreen", True)
+        elif options.keys() in "x" and options.keys() in "x":
+            self.x = options["x"]
+            self.y = options["y"]
+            self.window.geometry(f"{self.size_x}x{self.size_y}+{self.x}+{self.y}")
 
         self.window.update()
     
