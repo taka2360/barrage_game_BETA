@@ -4,7 +4,7 @@ import tkinter as tk
 class Window:
     def __init__(self, size_x: int, size_y: int, **options) -> None:
         """
-        Windowクラスを生成します
+        Windowクラスを生成します\n
         使用可能なオプション:
             fullscreen : bool　　　フルスクリーンかを指定します
         """
@@ -34,4 +34,4 @@ class Window:
 
         self.window.update()
     
-    
+
