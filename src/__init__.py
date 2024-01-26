@@ -1,1 +1,1 @@
-from .window import Window
+from .player import Player
