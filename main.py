@@ -61,10 +61,9 @@ class App:
         )
         self.menubar = self.canvas.create_rectangle(1680, 0, 2560, 1440, fill="#8b0000")
         self.canvas.pack()
-        self.player = Player(logger, config, self.canvas, 300, 1000, 5, "a")
+        self.player = Player(logger, config, self.canvas, 300, 1000, 15, "a")
 
         self.window.update()
-
     def update(self):
 
         if keyboard.is_pressed("up"):
@@ -76,9 +75,15 @@ class App:
         if keyboard.is_pressed("left"):
             self.player.move("l")
         
-        if keyboard.is_pressed("space"):
+        if keyboard.is_pressed("z"):
             self.player.firing()
-        self.player.update()
+
+        
+        if keyboard.is_pressed("shift"):
+            self.player.update("special")
+        else:
+            self.player.update("normal")
+        
         self.window.update()
 
 

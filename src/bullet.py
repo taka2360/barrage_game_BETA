@@ -14,7 +14,6 @@ class Bullet(ABC):
         pass
 
     def is_out(self, window_width, window_height):
-        """"""
         if (
             self.x + self.size / 2 < 0
             or self.x - self.size / 2 > window_width
@@ -32,13 +31,13 @@ class NormalBullet(Bullet):
         self.speed = speed
 
         self.bullet = self.canvas.create_oval(
-            x + self.size / 2,
-            y + self.size / 2,
-            x - self.size / 2,
-            y - self.size / 2,
+            x + self.size,
+            y + self.size,
+            x - self.size,
+            y - self.size,
             fill="red",
         )
 
     def update(self):
         self.y -= self.speed
-        self.canvas.moveto(self.bullet, self.x + self.size / 2, self.y)
+        self.canvas.moveto(self.bullet, self.x - self.size, self.y)
