@@ -1,5 +1,7 @@
 import tkinter as tk
+import math
 from abc import ABC, abstractmethod
+
 
 
 class Bullet(ABC):
@@ -26,18 +28,21 @@ class Bullet(ABC):
 
 
 class NormalBullet(Bullet):
-    def __init__(self, canvas: tk.Canvas, x, y, size, speed):
+    def __init__(self, canvas: tk.Canvas, x, y, size, speed, color, dir):
         super().__init__(canvas, x, y, size)
         self.speed = speed
+        self.dir = dir
+        self.color = color
 
         self.bullet = self.canvas.create_oval(
             x + self.size,
             y + self.size,
             x - self.size,
             y - self.size,
-            fill="red",
+            fill=self.color,
         )
 
     def update(self):
-        self.y -= self.speed
+        self.x -= math.sin(math.radians(self.dir)) * self.speed
+        self.y -= math.cos(math.radians(self.dir)) * self.speed
         self.canvas.moveto(self.bullet, self.x - self.size, self.y)

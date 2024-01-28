@@ -59,13 +59,28 @@ class App:
             borderwidth=0,
             bg="black",
         )
-        self.menubar = self.canvas.create_rectangle(1680, 0, 2560, 1440, fill="#8b0000")
+        self.menubar = self.canvas.create_rectangle(
+            self.window_width - self.window_width / 4,
+            0,
+            self.window_width,
+            self.window_height,
+            fill="#8b0000",
+        )
         self.canvas.pack()
-        self.player = Player(logger, config, self.canvas, 300, 1000, 15, "a")
+        self.player = Player(
+            logger,
+            config,
+            self.canvas,
+            self.window_width / 4 * 3 / 2,
+            self.window_height / 6 * 5,
+            15,
+            "a",
+        )
+        self.enemy_scheduler = EnemyScheduler(self.canvas)
 
         self.window.update()
-    def update(self):
 
+    def update(self):
         if keyboard.is_pressed("up"):
             self.player.move("u")
         if keyboard.is_pressed("down"):
@@ -74,16 +89,17 @@ class App:
             self.player.move("r")
         if keyboard.is_pressed("left"):
             self.player.move("l")
-        
+
         if keyboard.is_pressed("z"):
             self.player.firing()
 
-        
         if keyboard.is_pressed("shift"):
             self.player.update("special")
         else:
             self.player.update("normal")
-        
+
+        self.enemy_scheduler.update()
+
         self.window.update()
 
 
