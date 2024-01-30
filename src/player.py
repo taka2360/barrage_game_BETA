@@ -116,13 +116,13 @@ class Player:
     def firing(self):
         if self.now_frame % self.bullet_cooldown == 0:
             self.bullets.append(
-                NormalBullet(self.canvas, self.x, self.y - 20, 7, 50, "red", 0)
+                NormalBullet(self.canvas, self.x, self.y - 20, 7, 50, "red")
             )
             self.bullets.append(
-                NormalBullet(self.canvas, self.x - 20, self.y, 7, 50, "red", 0)
+                NormalBullet(self.canvas, self.x - 20, self.y, 7, 50, "red")
             )
             self.bullets.append(
-                NormalBullet(self.canvas, self.x + 20, self.y, 7, 50, "red", 0)
+                NormalBullet(self.canvas, self.x + 20, self.y, 7, 50, "red")
             )
         for c in self.character:
             self.canvas.lift(c)

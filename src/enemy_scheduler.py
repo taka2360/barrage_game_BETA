@@ -11,12 +11,21 @@ class EnemyScheduler:
     def update(self) -> list:
         self.frame += 1
 
-        if self.frame == 180:
-            self.enemies.append([Fairy(self.canvas, 0, 300, 1000, 500, 120, 30), 0])
+        if self.frame == 1:
+            self.enemies.append(
+                Fairy(
+                    self.canvas,
+                    first_x=0,
+                    first_y=200,
+                    last_x=200,
+                    last_y=300,
+                    frame=60,
+                    size=30,
+                    id=0,
+                ),
+            )
 
         for e in self.enemies:
-            e[0].update()
-            e[1] += 1
-
+            e.update()
 
         return self.enemies

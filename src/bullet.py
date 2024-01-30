@@ -28,7 +28,7 @@ class Bullet(ABC):
 
 
 class NormalBullet(Bullet):
-    def __init__(self, canvas: tk.Canvas, x, y, size, speed, color, dir):
+    def __init__(self, canvas: tk.Canvas, x, y, size, speed, color, dir=0):
         super().__init__(canvas, x, y, size)
         self.speed = speed
         self.dir = dir
@@ -43,6 +43,9 @@ class NormalBullet(Bullet):
         )
 
     def update(self):
-        self.x -= math.sin(math.radians(self.dir)) * self.speed
-        self.y -= math.cos(math.radians(self.dir)) * self.speed
+        if self.dir == 0:
+            self.y -= self.speed
+        else:
+            self.x -= math.sin(math.radians(self.dir)) * self.speed
+            self.y -= math.cos(math.radians(self.dir)) * self.speed
         self.canvas.moveto(self.bullet, self.x - self.size, self.y)
