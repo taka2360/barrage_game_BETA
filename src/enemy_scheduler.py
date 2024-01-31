@@ -8,7 +8,7 @@ class EnemyScheduler:
         self.frame = 0
         self.enemies = list()
 
-    def update(self) -> list:
+    def update(self, player_x, player_y) -> list:
         self.frame += 1
 
         if self.frame == 1:
@@ -26,6 +26,8 @@ class EnemyScheduler:
             )
 
         for e in self.enemies:
-            e.update()
+            e.update(player_x, player_y)
+            if e.hp <= 0:
+                self.canvas.delete(e.enemy)
 
         return self.enemies

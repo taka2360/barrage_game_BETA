@@ -3,13 +3,13 @@ import math
 from abc import ABC, abstractmethod
 
 
-
 class Bullet(ABC):
     def __init__(self, canvas: tk.Canvas, x, y, size):
         self.canvas = canvas
         self.x = x
         self.y = y
         self.size = size
+        self.damage = 5
 
     @abstractmethod
     def update(self):
@@ -33,6 +33,7 @@ class NormalBullet(Bullet):
         self.speed = speed
         self.dir = dir
         self.color = color
+        self.is_hit = False
 
         self.bullet = self.canvas.create_oval(
             x + self.size,
@@ -41,6 +42,10 @@ class NormalBullet(Bullet):
             y - self.size,
             fill=self.color,
         )
+
+    def hit(self):
+        self.canvas.delete(self.bullet)
+        self.is_hit = True
 
     def update(self):
         if self.dir == 0:

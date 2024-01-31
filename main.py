@@ -1,6 +1,7 @@
 import tkinter as tk
 import _tkinter
 import time
+import math
 
 import configparser
 
@@ -60,7 +61,7 @@ class App:
             bg="black",
         )
         self.menubar = self.canvas.create_rectangle(
-            self.window_width - self.window_width / 4,
+            self.window_width - self.window_width / 3,
             0,
             self.window_width,
             self.window_height,
@@ -71,7 +72,7 @@ class App:
             logger,
             config,
             self.canvas,
-            self.window_width / 4 * 3 / 2,
+            self.window_width / 3 * 3 / 2,
             self.window_height / 6 * 5,
             15,
             "a",
@@ -80,7 +81,21 @@ class App:
 
         self.window.update()
 
+    def CD(self):
+        # プレイヤー -> 敵
+        for player_bullet in self.player.bullets:
+            for enemy in self.enemy_scheduler.enemies:
+                hit_distance = player_bullet.size + enemy.size
+                distance = math.sqrt(
+                    (player_bullet.x - enemy.x) ** 2 + (player_bullet.y - enemy.y) ** 2
+                )
+                if hit_distance > distance:
+                    player_bullet.hit()
+                    enemy.hit(player_bullet)
+
     def update(self):
+        self.CD()
+
         if keyboard.is_pressed("up"):
             self.player.move("u")
         if keyboard.is_pressed("down"):
@@ -98,7 +113,7 @@ class App:
         else:
             self.player.update("normal")
 
-        self.enemy_scheduler.update()
+        self.enemy_scheduler.update(self.player.x, self.player.y)
 
         self.window.update()
 
