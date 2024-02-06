@@ -81,9 +81,10 @@ class Fairy(Enemy):
                 if self.is_first_firing:
                     self.is_first_firing = False
                     self.firing("circle", None, player_dir)
+                    self.counts[1] = player_dir
                 if self.frame % 10 == 0 and self.counts[0] < 6:
                     self.counts[0] += 1
-                    self.firing("radiation", dir=None, player_dir=player_dir)
+                    self.firing("radiation", dir=None, player_dir=self.counts[1])
 
         for i, bullet in reversed(list(enumerate(self.bullets))):
             bullet.update()
@@ -93,29 +94,25 @@ class Fairy(Enemy):
 
         self.canvas.lift(self.enemy)
 
-    def firing(self, mode, dir, player_dir=0):
+    def firing(self, mode, **options):
         match mode:
             case "radiation":
-                self.bullets.append(
-                    NormalBullet(
-                        self.canvas, self.x, self.y, 15, 5, "blue", player_dir + 15
-                    )
-                )
-                self.bullets.append(
-                    NormalBullet(
-                        self.canvas, self.x, self.y, 15, 5, "blue", player_dir + 5
-                    )
-                )
-                self.bullets.append(
-                    NormalBullet(
-                        self.canvas, self.x, self.y, 15, 5, "blue", player_dir - 5
-                    )
-                )
-                self.bullets.append(
-                    NormalBullet(
-                        self.canvas, self.x, self.y, 15, 5, "blue", player_dir - 15
-                    )
-                )
+                row_space = options["row_space"]
+                column_space = options["column_space"]
+                player_dir = options["player_dir"]
+                for i in range(options["column"]):
+                    for j in range(options["row"]):
+                        self.bullets.append(
+                            NormalBullet(
+                                self.canvas,
+                                self.x,
+                                self.y,
+                                15,
+                                5,
+                                "blue",
+                                player_dir + 15,
+                            )
+                        )
 
             case "circle":
                 dir2 = 0
