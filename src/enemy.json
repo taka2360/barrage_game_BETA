@@ -1,0 +1,14 @@
+{
+    "$comment": "ステージは1200*1000",
+    "1": {
+        "type":"Fairy",
+        "spawn_frame": 0,
+        "spawn_coords": [1200, 200],
+        "size":50,
+        "scripts":[
+            "moveto(x=300, y=800)",
+            "firing(mode=radiation, dir=player_dir, column=3, column_space=10, row=5, row_space=10)"
+            
+        ]
+    }
+}

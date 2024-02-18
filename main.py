@@ -53,6 +53,8 @@ class App:
             # self.window.attributes("-fullscreen", True)
             pass
 
+        self.stage_width = (0 - (1.2 * self.window_height - self.window_width)) * 2
+
         self.canvas = tk.Canvas(
             self.window,
             width=self.window_width,
@@ -61,7 +63,7 @@ class App:
             bg="black",
         )
         self.menubar = self.canvas.create_rectangle(
-            self.window_width - self.window_width / 3,
+            self.stage_width,
             0,
             self.window_width,
             self.window_height,
@@ -77,7 +79,7 @@ class App:
             15,
             "a",
         )
-        self.enemy_scheduler = EnemyScheduler(self.canvas)
+        self.enemy_scheduler = EnemyScheduler(self.canvas, self.stage_width, window_height)
 
         self.window.update()
 
