@@ -22,13 +22,15 @@ class EnemyScheduler:
             if self.frame == enemy["spawn_frame"]:
                 match enemy["type"]:
                     case "Fairy":
-                        Fairy(
-                            self.canvas,
-                            enemy["spawn_coords"][0] * self.stage_width / 1200,
-                            enemy["spawn_coords"][1] * self.stage_height / 1000,
-                            enemy["size"],
-                            int(key),
-                            enemy["scripts"],
+                        self.enemies.append(
+                            Fairy(
+                                self.canvas,
+                                enemy["spawn_coords"][0] * self.stage_width / 1200,
+                                enemy["spawn_coords"][1] * self.stage_height / 1000,
+                                enemy["size"],
+                                int(key),
+                                enemy["scripts"],
+                            )
                         )
 
         self.frame += 1

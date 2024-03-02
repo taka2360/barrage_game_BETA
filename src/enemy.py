@@ -12,6 +12,7 @@ class Enemy(ABC):
         self.x = x
         self.y = y
         self.size = size
+        self.canvas_size_adj = [canvas.winfo_depth]
 
     @abstractmethod
     def update(self):
@@ -51,6 +52,7 @@ class Fairy(Enemy):
         )
 
         self.scripts = list()
+        self.now_script = 0
         for script in scripts:
             if script.startswith("moveto("):
                 args = script.replace("moveto(", "")
@@ -58,17 +60,14 @@ class Fairy(Enemy):
                 args = args.replace(")", "")
                 args = args[::-1]
                 args = args.split(", ")
-
-                for i, arg in enumerate(args):
-                    args[i] = arg.split("=")
+                dict_args = dict()
 
                 for arg in args:
-                    try:
-                        int(arg)
-                    except ValueError:
-                        pass
+                    dict_args[arg.split("=")[0]] = arg.split("=")[1]
 
-                self.scripts.append(["moveto", int(args[0]), int(args[1])])
+                if "frame" in dict_args.keys():
+                    dict_args["frame"] = "60"
+                self.scripts.append(["moveto", dict_args])
 
             elif script.startswith("firing("):
                 pass
@@ -86,6 +85,15 @@ class Fairy(Enemy):
         self.hp -= bullet.damage
 
     def update(self, player_x, player_y):
+        if len(self.scripts) > self.now_script:
+            script = self.scripts[self.now_script]
+            match script[0]:
+                case "moveto":
+                    self.moveto(int(script[1]["x"]), int(script[1]["y"]), int(script[1]["frame"]))
+                    
+
+            self.now_script += 1
+
         player_dir = (
             math.degrees(math.atan((player_x - self.x) / (player_y - self.y))) + 180
         )
