@@ -35,7 +35,7 @@ class EnemyScheduler:
 
         self.frame += 1
 
-        for enemy in self.enemies:
+        for i, enemy in enumerate(self.enemies):
             enemy.update(player_x, player_y)
             if enemy.hp <= 0:
                 self.canvas.delete(enemy.enemy)

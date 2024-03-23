@@ -4,11 +4,22 @@
         "type":"Fairy",
         "spawn_frame": 0,
         "spawn_coords": [1200, 200],
-        "size":50,
+        "size":30,
         "scripts":[
-            "moveto(x=300, y=800, frame=60)",
-            "firing(mode=radiation, dir=player_dir, column=3, column_space=10, row=5, row_space=10)"
-            
+            "moveto(x=300, y=300, frame=100)",
+            "wait(frame=100)",
+            "firing(mode=radiation, dir=player_dir, column=5, column_space=10, row=5, row_space=10)"
+        ]
+    },
+    "2": {
+        "type":"Fairy",
+        "spawn_frame": 60,
+        "spawn_coords": [0, 300],
+        "size":30,
+        "scripts":[
+            "moveto(x=1000, y=400, frame=100)",
+            "wait(frame=100)",
+            "firing(mode=radiation, dir=player_dir, column=5, column_space=10, row=5, row_space=10)"
         ]
     }
 }

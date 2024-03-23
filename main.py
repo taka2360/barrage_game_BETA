@@ -117,6 +117,8 @@ class App:
 
         self.enemy_scheduler.update(self.player.x, self.player.y)
 
+        self.canvas.lift(self.menubar)
+
         self.window.update()
 
 
@@ -131,3 +133,5 @@ if __name__ == "__main__":
             logger.info("ウィンドウが閉じられました")
             break
         time.sleep(1 / MAX_FPS)
+
+        

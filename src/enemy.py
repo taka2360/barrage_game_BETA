@@ -29,6 +29,47 @@ class Enemy(ABC):
         else:
             return False
 
+    @staticmethod
+    def reshape_script(scripts):
+        def shaping(arg):
+            args = arg[::-1]
+            args = args.replace(")", "")
+            args = args[::-1]
+            args = args.split(", ")
+            dict_args = dict()
+
+            for a in args:
+                dict_args[a.split("=")[0]] = a.split("=")[1]
+            return dict_args
+
+        reshaped_scripts = list()
+
+        for script in scripts:
+            if script.startswith("moveto("):
+                args = script.replace("moveto(", "")
+                dict_args = shaping(args)
+
+                if not "frame" in dict_args.keys():
+                    dict_args["frame"] = "60"
+                reshaped_scripts.append(["moveto", dict_args])
+
+            elif script.startswith("firing("):
+                args = script.replace("firing(", "")
+                dict_args = shaping(args)
+                reshaped_scripts.append(["firing", dict_args])
+
+            elif script.startswith("wait("):
+                args = script.replace("wait(", "")
+                dict_args = shaping(args)
+                reshaped_scripts.append(["wait", dict_args])
+
+            else:
+                idx = script.find("(")
+                raise ScriptNameError(script[:idx])
+        
+        return reshaped_scripts
+
+
 
 class Fairy(Enemy):
     def __init__(self, canvas: tk.Canvas, first_x, first_y, size, id, scripts):
@@ -41,8 +82,8 @@ class Fairy(Enemy):
         self.frame = 1
         self.is_first_firing = True
         self.fire_functions = list()
-        self.hp = 5
-        self.counts = [0 for _ in range(1, 100)]
+        self.hp = 30
+        self.wait_count = 0
         self.enemy = self.canvas.create_oval(
             first_x + self.size,
             first_y + self.size,
@@ -51,29 +92,18 @@ class Fairy(Enemy):
             fill="yellow",
         )
 
-        self.scripts = list()
         self.now_script = 0
-        for script in scripts:
-            if script.startswith("moveto("):
-                args = script.replace("moveto(", "")
-                args = args[::-1]
-                args = args.replace(")", "")
-                args = args[::-1]
-                args = args.split(", ")
-                dict_args = dict()
-
-                for arg in args:
-                    dict_args[arg.split("=")[0]] = arg.split("=")[1]
-
-                if "frame" in dict_args.keys():
-                    dict_args["frame"] = "60"
-                self.scripts.append(["moveto", dict_args])
-
-            elif script.startswith("firing("):
-                pass
-            else:
-                idx = script.find("(")
-                raise ScriptNameError(script[:idx])
+        self.scripts = super().reshape_script(scripts)
+    
+    def moveto_main(self):
+        if (self.x < self.last_x + 2 and self.x > self.last_x - 2) and (
+            self.x < self.last_x + 2 and self.x > self.last_x - 2
+        ):
+            self.x = self.last_x
+            self.y = self.last_y
+        self.x += (self.last_x - self.x) / 10 * self.frame_mag
+        self.y += (self.last_y - self.y) / 10 * self.frame_mag
+        self.canvas.moveto(self.enemy, self.x - self.size, self.y)
 
     def moveto(self, x, y, frame):
         self.last_x = x
@@ -85,14 +115,40 @@ class Fairy(Enemy):
         self.hp -= bullet.damage
 
     def update(self, player_x, player_y):
-        if len(self.scripts) > self.now_script:
-            script = self.scripts[self.now_script]
+
+        player_dir = (
+            math.degrees(math.atan((player_x - self.x) / (player_y - self.y))) + 180
+        )
+
+        if len(self.scripts) > self.now_script and self.wait_count < 1:
+            self.now_script += 1
+            script = self.scripts[self.now_script - 1]
             match script[0]:
                 case "moveto":
-                    self.moveto(int(script[1]["x"]), int(script[1]["y"]), int(script[1]["frame"]))
-                    
-
-            self.now_script += 1
+                    self.moveto(
+                        int(script[1]["x"]),
+                        int(script[1]["y"]),
+                        int(script[1]["frame"]),
+                    )
+                case "firing":
+                    self.fire_functions.append(
+                        self.firing(
+                            mode=script[1]["mode"],
+                            dir=(
+                                int(script[1]["dir"])
+                                if type(script[1]["dir"]) == int
+                                else player_dir
+                            ),
+                            column=int(script[1]["column"]),
+                            column_space=int(script[1]["column_space"]),
+                            row=int(script[1]["row"]),
+                            row_space=int(script[1]["row_space"]),
+                        )
+                    )
+                case "wait":
+                    self.wait_count = int(script[1]["frame"])
+        else:
+            self.wait_count -= 1
 
         player_dir = (
             math.degrees(math.atan((player_x - self.x) / (player_y - self.y))) + 180
@@ -106,38 +162,13 @@ class Fairy(Enemy):
             self.y = self.last_y
         self.x += (self.last_x - self.x) / 10 * self.frame_mag
         self.y += (self.last_y - self.y) / 10 * self.frame_mag
-        self.canvas.moveto(self.enemy, self.x - self.size, self.y)
-
-        """-----敵の発射スケジュール設定ここから-----"""
-
-        if (
-            round(self.x) == self.last_x
-            and round(self.y) == self.last_y
-            and self.hp > 0
-        ):
-            if self.id == 0:
-                if self.is_first_firing:
-                    self.is_first_firing = False
-                    self.fire_functions.append(self.firing("circle"))
-                    self.fire_functions.append(
-                        self.firing(
-                            "radiation",
-                            dir=player_dir,
-                            column=3,
-                            column_space=10,
-                            row=5,
-                            row_space=10,
-                        )
-                    )
-
-        """-----ここまで-----"""
+        self.canvas.moveto(self.enemy, self.x - self.size, self.y - self.size/2)
 
         for i, g in enumerate(self.fire_functions):
             try:
                 next(g)
             except StopIteration:
                 del self.fire_functions[i]
-                print("stop")
 
         for i, bullet in reversed(list(enumerate(self.bullets))):
             bullet.update()
@@ -201,7 +232,7 @@ class Fairy(Enemy):
 
             case "circle":
                 dir2 = 0
-                for i in range(50):
+                for _ in range(50):
                     dir2 += 360 / 50
                     self.bullets.append(
                         NormalBullet(self.canvas, self.x, self.y, 15, 3, "blue", dir2)
