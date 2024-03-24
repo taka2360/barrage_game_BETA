@@ -79,7 +79,9 @@ class App:
             15,
             "a",
         )
-        self.enemy_scheduler = EnemyScheduler(self.canvas, self.stage_width, window_height)
+        self.enemy_scheduler = EnemyScheduler(
+            self.canvas, self.stage_width, window_height
+        )
 
         self.window.update()
 
@@ -125,13 +127,21 @@ class App:
 if __name__ == "__main__":
     logger.info("起動しました")
     app = App()
+    START_TIME = time.time()
     MAX_FPS = config.getint("Window", "MAX_FPS")
+
     while True:
+        process_start_time = time.time()
         try:
             app.update()
         except _tkinter.TclError:
             logger.info("ウィンドウが閉じられました")
             break
-        time.sleep(1 / MAX_FPS)
+        process_finish_time = time.time()
 
-        
+
+        time.sleep(
+            1 / MAX_FPS - (process_finish_time - process_start_time)
+            if 1 / MAX_FPS - (process_finish_time - process_start_time) > 0
+            else 0
+        )

@@ -28,7 +28,6 @@ class EnemyScheduler:
                                 enemy["spawn_coords"][0] * self.stage_width / 1200,
                                 enemy["spawn_coords"][1] * self.stage_height / 1000,
                                 enemy["size"],
-                                int(key),
                                 enemy["scripts"],
                             )
                         )
